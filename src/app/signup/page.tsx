@@ -4,16 +4,35 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 
 const SignupPage = () => {
+    const router = useRouter();
     const [user, setUser] = React.useState({
         username: "",
         email: "",
         password: ""
     });
 
-    const onSignup = async () => {}
+    const [loading, setLoading] = React.useState(false);
+
+    const onSignup = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.post("/api/users/signup", user);
+            console.log(response);
+            toast.success(response.data.message);
+            setTimeout(() => {
+                router.push("/login");
+            }, 3000);
+        } catch (error: any) {
+            console.log("Signup Err: ", error);
+            toast.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser({
@@ -24,8 +43,15 @@ const SignupPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <h1>Signup page</h1>
+            <h1>Create your account</h1>
             <hr />
+            <Toaster
+             position="top-right" 
+             reverseOrder={false}
+             toastOptions={{
+                duration: 10000,
+             }}
+            />
             <div className="mb-4 flex flex-col">
                 <label htmlFor="user_name">Username</label>
                 <input

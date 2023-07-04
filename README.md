@@ -1,5 +1,5 @@
 # BeyondU
-An E-learning platform where learners can buy the courses and teachers can upload their courses.
+A FullStack E-learning platform where learners can buy the courses and teachers can upload their courses.
 
 ## Getting Started
 
