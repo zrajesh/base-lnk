@@ -25,7 +25,7 @@ const LoginPage = () => {
             router.push("/");
         } catch (error: any) {
             console.log("Login Err: ", error);
-            toast.error(error.message);
+            toast.error(error.response.data.error); 
         } finally {
             setLoading(false);
         }

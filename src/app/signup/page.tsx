@@ -28,7 +28,7 @@ const SignupPage = () => {
             }, 3000);
         } catch (error: any) {
             console.log("Signup Err: ", error);
-            toast.error(error.message);
+            toast.error(error.response.data.error);
         } finally {
             setLoading(false);
         }
