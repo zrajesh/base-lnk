@@ -1,5 +1,5 @@
-# BeyondU
-A FullStack E-learning platform where learners can buy the courses and teachers can upload their courses.
+# LeadFlow
+A smart CRM platform where you can scrap the emails, send bulk emails and do whatsapp campaign.
 
 ## Getting Started
 
