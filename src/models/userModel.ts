@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide a password"]
     },
+    bio: {
+        type: String
+    },
+    avatar: {
+        type: String
+    },
     isVerified: {
         type: Boolean,
         default: false
@@ -22,6 +28,21 @@ const userSchema = new mongoose.Schema({
     role: {
         type: Number,
         default: 1
+    },
+    links: [
+        {
+            url: String,
+            title: String,
+            icon: String
+        }
+    ],
+    socialMedia: {
+        facebook: String,
+        instagram: String,
+        threads: String,
+        linkedin: String,
+        twitter: String,
+        github: String,
     },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,

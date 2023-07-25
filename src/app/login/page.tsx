@@ -3,32 +3,42 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import PageLoader from "../components/pageLoader";
 
 
 const LoginPage = () => {
     const router = useRouter();
-    const [user, setUser] = React.useState({
+    const [user, setUser] = useState({
         email: "",
         password: ""
     });
 
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const onLogin = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.post("/api/users/login", user);
-            console.log(response);
-            toast.success(response.data.message);
-            router.push("/");
-        } catch (error: any) {
-            console.log("Login Err: ", error);
-            toast.error(error.response.data.error); 
-        } finally {
-            setLoading(false);
+    const isFieldsValidated = ():boolean => {
+        if (user.email === "" || user.password === "") {
+            toast.error("Please fill all the fields.");
+            return false;
         }
+        return true;
+    }
+    const onLogin = async () => {
+        if (isFieldsValidated()) {
+            try {
+                setLoading(true);
+                const response = await axios.post("/api/users/login", user);
+                console.log(response);
+                toast.success(response.data.message);
+                router.push("/");
+            } catch (error: any) {
+                console.log("Login Err: ", error);
+                toast.error(error.response.data.error); 
+            } finally {
+                setLoading(false);
+            }
+        };
     }
 
     const handleChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,10 +56,14 @@ const LoginPage = () => {
              position="top-right" 
              reverseOrder={false}
              toastOptions={{
-                duration: 10000,
+                duration: 5000,
              }} 
             />
-            <div className="mb-4 flex flex-col">
+            {
+                loading &&
+                <PageLoader />
+            }
+            <div className="mb-4 flex flex-col w-11/12 sm:w-auto">
                 <label
                  htmlFor="user_email">Email</label>
                 <input
@@ -57,17 +71,17 @@ const LoginPage = () => {
                  onChange={handleChange("email")} 
                  type="text" id="user_email"
                  placeholder="Enter email"
-                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-96 p-3 border"
+                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-11/12 sm:w-96 p-3 border"
                 />
             </div>
-            <div className="mb-4 flex flex-col">
+            <div className="mb-4 flex flex-col w-11/12 sm:w-auto">
                 <label htmlFor="user_password">Password</label>
                 <input
                  value={user.password} 
                  onChange={handleChange("password")} 
                  type="password" id="user_password"
                  placeholder="Enter password"
-                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-96 p-3 border"
+                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-11/12 sm:w-96 p-3 border"
                 />
             </div>
             <div>
@@ -79,7 +93,7 @@ const LoginPage = () => {
                 </button>
             </div>
             <div className="mt-4">
-                <p>
+                <p className="text-center">
                     Haven&apos;t created account?  <Link className="text-[#0066cc] underline" href="/signup">Signup here</Link>
                 </p>
             </div>

@@ -3,8 +3,9 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
+import PageLoader from "../components/pageLoader";
 
 
 const SignupPage = () => {
@@ -14,23 +15,40 @@ const SignupPage = () => {
         email: "",
         password: ""
     });
+    const [loading, setLoading] = useState(false);
 
-    const [loading, setLoading] = React.useState(false);
+    const isFieldsValidated = (): boolean => {
+        // Email validation regex pattern
+        const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;      
+        if (user.username === "" || user.email === "" || user.password === "") {
+          toast.error("Please fill all the fields.");
+          return false;
+        }
+        // Check if the email matches the regex pattern
+        if (!emailRegex.test(user.email)) {
+          toast.error("Invalid email address.");
+          return false;
+        }
+        return true;
+    };
+      
 
     const onSignup = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.post("/api/users/signup", user);
-            console.log(response);
-            toast.success(response.data.message);
-            setTimeout(() => {
-                router.push("/login");
-            }, 3000);
-        } catch (error: any) {
-            console.log("Signup Err: ", error);
-            toast.error(error.response.data.error);
-        } finally {
-            setLoading(false);
+        if (isFieldsValidated()) {
+            try {
+                setLoading(true);
+                const response = await axios.post("/api/users/signup", user);
+                console.log(response);
+                toast.success(response.data.message);
+                setTimeout(() => {
+                    router.push("/login");
+                }, 3000);
+            } catch (error: any) {
+                console.log("Signup Err: ", error);
+                toast.error("Signup Error. Try again");
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -49,38 +67,42 @@ const SignupPage = () => {
              position="top-right" 
              reverseOrder={false}
              toastOptions={{
-                duration: 10000,
+                duration: 5000,
              }}
             />
-            <div className="mb-4 flex flex-col">
+            {
+                loading &&
+                <PageLoader />
+            }
+            <div className="mb-4 flex flex-col w-11/12 sm:w-auto">
                 <label htmlFor="user_name">Username</label>
                 <input
                  value={user.username} 
                  onChange={handleChange("username")} 
                  type="text" id="user_name"
                  placeholder="Enter username"
-                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-96 p-3 border"
+                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-11/12 sm:w-96 p-3 border"
                 />
             </div>
-            <div className="mb-4 flex flex-col">
+            <div className="mb-4 flex flex-col w-11/12 sm:w-auto">
                 <label
                  htmlFor="user_email">Email</label>
                 <input
                  value={user.email} 
                  onChange={handleChange("email")} 
-                 type="text" id="user_email"
+                 type="email" id="user_email" required
                  placeholder="Enter email"
-                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-96 p-3 border"
+                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-11/12 sm:w-96 p-3 border"
                 />
             </div>
-            <div className="mb-4 flex flex-col">
+            <div className="mb-4 flex flex-col w-11/12 sm:w-auto">
                 <label htmlFor="user_password">Password</label>
                 <input
                  value={user.password} 
                  onChange={handleChange("password")} 
                  type="password" id="user_password"
                  placeholder="Enter password"
-                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-96 p-3 border"
+                 className="bg-gray-50 border-gray-500 text-gray-900 text-sm rounded-lg focus:ring-[#000] focus:border-[#000] outline-none block w-11/12 sm:w-96 p-3 border"
                 />
             </div>
             <div>

@@ -35,7 +35,7 @@ const sendEmail = async function ({email, emailType, userId}: sendEmailPropType)
 
         const email_subject = emailType === "VERIFY_EMAIL" ? "Verify your email" : "Reset your password";
         const mailOptions = {
-            from: "leadflow@gmail.com",
+            from: "baselnk@gmail.com",
             to: email,
             subject: email_subject,
             html: `<p>

@@ -1,5 +1,8 @@
-# LeadFlow
-A smart CRM platform where you can scrap the emails, send bulk emails and do whatsapp campaign.
+# BaseLnk
+One link for everything you create, curate, and sell. 
+
+## View Live
+coming soon...
 
 ## Getting Started
 
