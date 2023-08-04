@@ -7,7 +7,6 @@ import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import PageLoader from "../components/pageLoader";
 
-
 const LoginPage = () => {
     const router = useRouter();
     const [user, setUser] = useState({
@@ -31,6 +30,7 @@ const LoginPage = () => {
                 const response = await axios.post("/api/users/login", user);
                 console.log(response);
                 toast.success(response.data.message);
+                localStorage.setItem("username", response.data.username);
                 router.push("/");
             } catch (error: any) {
                 console.log("Login Err: ", error);

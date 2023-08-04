@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState, MutableRefObject } from 'react'
 import { Menu, X } from 'lucide-react'
 import Image from 'next/image';
 import Link from 'next/link';
@@ -30,7 +30,9 @@ interface NavBarProps {
 const NavBar = ({ isLogin }: NavBarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin);
+  const profileCard: MutableRefObject<HTMLDivElement | null> = useRef(null);
   const router = useRouter();
+  let userName: MutableRefObject<string> = useRef("");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -39,6 +41,9 @@ const NavBar = ({ isLogin }: NavBarProps) => {
   useEffect(() => {
     setIsLoggedIn(isLogin);
   }, [isLogin]);
+  if (isLoggedIn) {
+    userName.current = localStorage.getItem("username") || "";
+  }
   const logo_path = isLoggedIn ? "/dashboard" : "/";
 
   const logout = async () => {
@@ -52,9 +57,14 @@ const NavBar = ({ isLogin }: NavBarProps) => {
         toast.error(error.response.data.error)
     }
   }
+
+  const toggleProfile = () => {
+    const profileElement = profileCard.current;
+    profileElement?.classList.toggle("hidden");    
+  }
   
   return (
-    <div className="relative w-full bg-white">
+    <div className="relative w-full bg-[#fff]">
         <Toaster
           position="top-right" 
           reverseOrder={false}
@@ -62,7 +72,7 @@ const NavBar = ({ isLogin }: NavBarProps) => {
             duration: 5000,
           }}
         />
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+      <div className="mx-auto relative flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <span>
             <Image src="/brand.png" width={40} height={40} alt='Logo of baselnk' />
@@ -88,25 +98,36 @@ const NavBar = ({ isLogin }: NavBarProps) => {
         }
         {
             isLoggedIn && 
-            <div className="hidden lg:block">
-            <Link
-            href="/dashboard"
-            className="block ml-3 text-center rounded-md mt-4 w-32 bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-            >
-            Dashboard
-            </Link>
-            </div>
-        }
-        {
-            isLoggedIn && 
-            <div className="hidden lg:block">
-            <button
-            type="button"
-            onClick={logout}
-            className="ml-3 mt-4 w-32 rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-            >
-            Logout
-            </button>
+            <div className="absolute right-14">
+              <div className="relative">
+              <div onClick={toggleProfile} className="bg-[#606967] cursor-pointer flex justify-center items-center rounded-full w-10 h-10 text-[#FFF]">
+                <span className="text-lg font-semibold">
+                {userName.current ? userName.current[0].toUpperCase() : "U"}
+                </span>
+              </div>
+              <div
+               ref={profileCard}
+               className="hidden absolute top-12 right-2 p-5 bg-[#fff] h-56 w-60 overflow-y-auto rounded-2xl z-10 shadow-lg shadow-black-500/40">
+                <div       
+                //  onClick={logout}           
+                 className="hover:bg-[#f6f7f5db] hover:rounded-xl cursor-pointer h-10 w-full flex items-center pl-5">
+                  <Link 
+                  className=""
+                  href="#"
+                  >Edit profile
+                  </Link>
+                </div>
+                <div 
+                 onClick={logout}                 
+                 className="hover:bg-[#f6f7f5db] hover:rounded-xl cursor-pointer h-10 w-full flex items-center pl-5">
+                  <Link                   
+                  className=""
+                  href="#"
+                  >Logout
+                  </Link>
+                </div>
+               </div>
+              </div>
             </div>
         }
         <div className="flex">
@@ -175,30 +196,7 @@ const NavBar = ({ isLogin }: NavBarProps) => {
                         ))}
                         </nav>
                     </div>
-                }
-                {
-                    isLoggedIn && 
-                    <>
-                    <Link
-                    href="/dashboard"
-                    className="block ml-3 text-center rounded-md mt-4 w-32 bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    >
-                    Dashboard
-                    </Link>
-                    </>
-                }
-                {
-                    isLoggedIn && 
-                    <>
-                    <button
-                    type="button"
-                    onClick={logout}
-                    className="ml-3 mt-4 w-32 rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                    >
-                    Logout
-                  </button>
-                    </>
-                }            
+                }                           
                 {
                     !isLoggedIn && 
                     <>

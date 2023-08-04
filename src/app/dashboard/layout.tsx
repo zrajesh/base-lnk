@@ -7,6 +7,7 @@ export default function DashboardLayout({
     children: React.ReactNode;
   }) {
     const isToken = cookies().has("token");
+    
     return (
       <section>
         <NavBar isLogin={isToken} />

@@ -1,9 +1,14 @@
-import React from 'react';
+import { cookies } from 'next/headers';
+import Dashboard from './dashboard';
 
 const DashboardPage = () => {
-    
+    const userToken = cookies().get("token");
+    const userTokenValue = userToken?.value || "";
+
     return (
-        <h1>Dashboard</h1>
+        <>
+        <Dashboard userTokenValue={userTokenValue} />
+        </>
     );
 };
 
