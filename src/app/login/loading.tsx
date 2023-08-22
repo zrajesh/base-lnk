@@ -1,6 +1,6 @@
 "use client"
 
-import PageLoader from "../components/pageLoader"
+import PageLoader from "../../components/pageLoader"
 
 export default function Loading() {
     return <PageLoader />

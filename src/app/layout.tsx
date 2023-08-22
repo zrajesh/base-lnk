@@ -1,5 +1,9 @@
+"use client"
+
+import { useState } from 'react'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import UserContext from '@/context/userContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,10 +17,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const [userData, setUserData] = useState({
+    username: "",
+    role: "",
+    bio: "",
+    avatar: "",
+    socialMedia: ""
+  });
+
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={inter.className}>
+        <UserContext.Provider value={{userData, setUserData}}>
         {children}
+        </UserContext.Provider>
       </body>
     </html>
   )

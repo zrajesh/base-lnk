@@ -1,24 +1,18 @@
 import { connectDB } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
-import jwt_decode from "jwt-decode";
 import { NextRequest, NextResponse } from "next/server";
-
 
 connectDB();
 
-interface DecodedToken {
-    id: string;
-    username: string;
-    email: string;
-}
-  
-export async function POST (request: NextRequest) {
+export async function POST(request: NextRequest) {
+    const reqBody = await request.json();
+    const { username } = reqBody;            
+    
     try {
-        const reqBody = await request.json();
-        const { userToken } = reqBody;
-        const decoded_token = jwt_decode(userToken) as DecodedToken;
-        const userEmail = decoded_token.email;
-        const user = await User.findOne({email: userEmail}); 
+        const user = await User.findOne({username: username});
+        if (!user) {
+            return NextResponse.json({ error: "User not found" }, { status: 404 });
+        }
         const userData = {
             username: user.username,
             role: user.role,
@@ -26,13 +20,10 @@ export async function POST (request: NextRequest) {
             avatar: user.avatar,
             email: user.email,
             links: user.links,
-            totalLinks: user.links.length,
             socialMedia: user.socialMedia
         }
         return NextResponse.json(userData, {status: 200});
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json({error: error}, {status: 500});
     }
 }
-
-export async function GET (request: NextRequest) {}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Toaster, toast } from "react-hot-toast";
-import PageLoader from "../components/pageLoader";
+import PageLoader from "../../components/pageLoader";
 
 const LoginPage = () => {
     const router = useRouter();

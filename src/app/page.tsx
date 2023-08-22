@@ -1,4 +1,4 @@
-import NavBar from "./components/nav";
+import NavBar from "../components/nav";
 import { cookies } from "next/headers"
 
 export default function Home() {

@@ -1,4 +1,4 @@
-import NavBar from "../components/nav"
+import NavBar from "../../components/nav"
 
 export default function LoginLayout({
     children

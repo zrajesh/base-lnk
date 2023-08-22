@@ -12,15 +12,7 @@ const menuItems = [
   {
     name: 'Links',
     href: '/dashboard',
-  },
-  {
-    name: 'Appearance',
-    href: '/dashboard/appearance',
-  },
-  {
-    name: 'Analytics',
-    href: '/dashboard/analytics',
-  },
+  }
 ]
 
 interface NavBarProps {
@@ -30,9 +22,9 @@ interface NavBarProps {
 const NavBar = ({ isLogin }: NavBarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin);
+  const [userName, setUserName] = useState("User");
   const profileCard: MutableRefObject<HTMLDivElement | null> = useRef(null);
   const router = useRouter();
-  let userName: MutableRefObject<string> = useRef("");
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -40,10 +32,10 @@ const NavBar = ({ isLogin }: NavBarProps) => {
 
   useEffect(() => {
     setIsLoggedIn(isLogin);
+    const user_name = localStorage.getItem("username") || "User";
+    setUserName(user_name);  
   }, [isLogin]);
-  if (isLoggedIn) {
-    userName.current = localStorage.getItem("username") || "";
-  }
+
   const logo_path = isLoggedIn ? "/dashboard" : "/";
 
   const logout = async () => {
@@ -83,16 +75,23 @@ const NavBar = ({ isLogin }: NavBarProps) => {
             isLoggedIn &&
             <div className="hidden grow items-start lg:flex">
                 <ul className="ml-12 inline-flex space-x-8">
-                {menuItems.map((item) => (
-                <li key={item.name}>
+                {menuItems.map((item, index) => (
+                <li key={item.name + index}>
                     <Link
                     href={item.href}
                     className="text-sm font-semibold text-gray-800 hover:text-gray-900"
                     >
                     {item.name}
-                    </Link>
+                    </Link>                    
                 </li>
                 ))}
+                <li>
+                  <Link
+                   className="text-sm font-semibold text-gray-800 hover:text-gray-900"
+                   href={`http://localhost:3000/${userName}`}>
+                    My Base Link
+                  </Link>
+                </li>
                 </ul>
             </div>
         }
@@ -102,7 +101,7 @@ const NavBar = ({ isLogin }: NavBarProps) => {
               <div className="relative">
               <div onClick={toggleProfile} className="bg-[#606967] cursor-pointer flex justify-center items-center rounded-full w-10 h-10 text-[#FFF]">
                 <span className="text-lg font-semibold">
-                {userName.current ? userName.current[0].toUpperCase() : "U"}
+                {userName[0].toUpperCase()}
                 </span>
               </div>
               <div
@@ -113,7 +112,7 @@ const NavBar = ({ isLogin }: NavBarProps) => {
                  className="hover:bg-[#f6f7f5db] hover:rounded-xl cursor-pointer h-10 w-full flex items-center pl-5">
                   <Link 
                   className=""
-                  href="#"
+                  href="/edit/profile"
                   >Edit profile
                   </Link>
                 </div>
